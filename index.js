@@ -1,9 +1,13 @@
 console.clear();
 
-import express from 'express';
-import dotenv from 'dotenv';
+const express = require('express');
+const dotenv = require('dotenv');
+
 // router de cuenta
-import cuentaRouter from './routes/cuenta.route.js';
+const cuentaRouter = require('./routes/cuenta.route.js');
+
+const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/manejo.errores');
+
 
 
 // leer archivo con variables de entorno
@@ -13,13 +17,16 @@ const PORT = process.env.PORT;
 
 const expressApp = express();
 
-//middleare para detectar body
+//middleware para detectar body
 expressApp.use(express.json());
 expressApp.use(express.text());
 
 // usar router de cuenta
 expressApp.use("/cuenta", cuentaRouter);
 
+expressApp.use(logErrors);
+expressApp.use(boomErrorHandler);
+expressApp.use(errorHandler);
 
 
 expressApp.listen(PORT, () =>
