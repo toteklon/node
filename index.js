@@ -1,34 +1,40 @@
 console.clear();
 
 const express = require('express');
-const dotenv = require('dotenv');
+const dotenv = require('dotenv').config();
 
 // router de cuenta
 const cuentaRouter = require('./routes/cuenta.route.js');
 
-const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/manejo.errores');
+// credenciales de la bbdd
+const sequelize = require('./database/bbdd');
 
+const { boomErrorHandler, errorHandler } = require('./middlewares/manejo.errores');
 
-
-// leer archivo con variables de entorno
-dotenv.config();
-// obtener variables de entorno
 const PORT = process.env.PORT;
 
 const expressApp = express();
+
 
 //middleware para detectar body
 expressApp.use(express.json());
 expressApp.use(express.text());
 
 // usar router de cuenta
-expressApp.use("/cuenta", cuentaRouter);
+expressApp.use('/cuenta', cuentaRouter);
 
-expressApp.use(logErrors);
 expressApp.use(boomErrorHandler);
 expressApp.use(errorHandler);
 
+expressApp.listen(PORT, function () {
+	console.log(`Servidor levantado en el puerto ${PORT}`);
 
-expressApp.listen(PORT, () =>
-	console.log(`Servidor levantado en el puerto ${PORT}`)
-);
+
+	sequelize.authenticate().then(() => {
+		console.log('fino');
+	}).catch(error => {
+		console.log('falla', error);
+	})
+
+});
+	

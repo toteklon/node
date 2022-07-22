@@ -6,8 +6,13 @@ const cuentaServicios = require('../servicios/cuentaServicios.js');
 
 // crear router
 const cuentaRouter = express.Router();
+
 // instanciar capa de servicios
 const serviciosCuenta = new cuentaServicios();
+
+// instaciar validaciones
+const validarCuenta = require('../schemas/cuentaSchema')
+
 
 // ruta get todos loa registros 
 cuentaRouter.get('/', async (req, res) => {    
@@ -25,6 +30,9 @@ cuentaRouter.get('/', async (req, res) => {
 cuentaRouter.get('/:id', async (req, res, next) => {    
     try {
         const { id } = req.params;
+        // validar datos        
+        const verificacion = await validarCuenta.validarBuscarCuenta({id});
+        // peticion de busqueda
         const datosCuenta = await serviciosCuenta.cuenta(id);
         res.status(200).json(datosCuenta);           
     } catch (error) {
@@ -36,6 +44,9 @@ cuentaRouter.get('/:id', async (req, res, next) => {
 cuentaRouter.post('/', async (req, res, next) => {
     try {
         const datos = req.body;
+        // validar datos        
+        const verificacion = await validarCuenta.validarCrearCuenta(datos);
+        // peticion de registro
         const nuevaCuenta = await serviciosCuenta.crearCuenta(datos);
         res.status(201).json(nuevaCuenta);
     }
@@ -48,6 +59,9 @@ cuentaRouter.post('/', async (req, res, next) => {
 cuentaRouter.delete('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
+        // validar datos       
+        const verificacion = await validarCuenta.validarBuscarCuenta({id});
+        // peticion de eliminacion
         const datosCuenta = await serviciosCuenta.borrarCuenta(id);
         res.status(200).json({
             infoCta: id,
@@ -63,6 +77,9 @@ cuentaRouter.patch('/:id', async (req, res, next) => {
     try {
         const {id} = req.params;
         const datos = req.body;
+        // validar datos
+        const verificacion = await validarCuenta.validarEditarCuenta(datos);
+        // peticion de actualizacion
         const datosCuenta = await serviciosCuenta.editarCuenta(id, datos);
         res.json(datosCuenta);
     }           
@@ -71,5 +88,4 @@ cuentaRouter.patch('/:id', async (req, res, next) => {
     }
 });
 
-  //export default cuentaRouter;
-  module.exports = cuentaRouter;
+module.exports = cuentaRouter;

@@ -8,7 +8,7 @@ class cuentaServicios {
     async cuentas() {
         const infoCuenta = await USERS_BBDD;
         if (!infoCuenta) {
-            throw new Error('Archivo sin Data');
+            throw boom.resourceGone ('No Hay Datos');
         }
         return infoCuenta;
     }
@@ -18,7 +18,7 @@ class cuentaServicios {
         if (!infoCuenta) {
             throw boom.notFound('Cuenta no Encontrada');
         }
-        return infoCuenta;
+            return infoCuenta;
     }
 
     async crearCuenta(data) {
@@ -26,9 +26,10 @@ class cuentaServicios {
         const id = data.id;
         const first_name = data.first_name;
         const last_name = data.last_name;
+        const email = data.email;
         
         USERS_BBDD.push({
-            id:id, first_name:first_name, last_name:last_name
+            id:id, first_name:first_name, last_name:last_name, email:email
         });
         return data;
 
@@ -46,6 +47,7 @@ class cuentaServicios {
     async editarCuenta(id, datos) {
         const first_name = datos.first_name;
         const last_name = datos.last_name;
+        const email = datos.email;
 
 		const infoCuenta = USERS_BBDD.find((infoCuenta) => infoCuenta.id === +id);
         if (!infoCuenta) {
@@ -53,6 +55,7 @@ class cuentaServicios {
         }
         infoCuenta.first_name = first_name;
         infoCuenta.last_name = last_name;
+        infoCuenta.email = email;
 
         return infoCuenta;
     }
