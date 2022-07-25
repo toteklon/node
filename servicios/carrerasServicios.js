@@ -18,23 +18,21 @@ class carrerasServicios {
     }
 
     async getCarreraId(id) {
-        const obtenerDatos = await Carrera.findOne({ where: { id: id }})
-        if (!obtenerDatos) {
+        const obtenerDatos = await Carrera.findByPk(id);
+        if (obtenerDatos === null) {
             throw boom.notFound('Carrera no Encontrada');
         }
             return obtenerDatos;
     }
 
     async crearCarrera(datos) {
-
         const obtenerDatos = await Carrera.create(datos);
         return obtenerDatos;
-
     }
 
     async borrarCarrera(id) {
-        const obtenerDatos = await Carrera.findOne({ where: { id: id }})
-        if (!obtenerDatos) {
+        const obtenerDatos = await Carrera.findByPk(id);
+        if (obtenerDatos === null) {
             throw boom.notFound('Carrera no Encontrada');
         }
         await Carrera.destroy({ where: { id: id }} )
@@ -43,8 +41,8 @@ class carrerasServicios {
     }
 
     async editarCarrera(id, datos) {
-        const obtenerDatos = await Carrera.findOne({ where: { id: id }})
-        if (!obtenerDatos) {
+        const obtenerDatos = await Carrera.findByPk(id);
+        if (obtenerDatos === null) {
             throw boom.notFound('Carrera no Encontrada');
         }
         await Carrera.update(datos, { where: { id: id }})
