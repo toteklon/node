@@ -4,10 +4,7 @@ const express = require('express');
 const dotenv = require('dotenv').config();
 
 // router de cuenta
-const cuentaRouter = require('./routes/cuenta.route.js');
-
-// credenciales de la bbdd
-const sequelize = require('./database/bbdd');
+const carreraRouter = require('./routes/carrera.route.js');
 
 const { boomErrorHandler, errorHandler } = require('./middlewares/manejo.errores');
 
@@ -21,20 +18,11 @@ expressApp.use(express.json());
 expressApp.use(express.text());
 
 // usar router de cuenta
-expressApp.use('/cuenta', cuentaRouter);
+expressApp.use('/carreras', carreraRouter);
 
 expressApp.use(boomErrorHandler);
 expressApp.use(errorHandler);
 
-expressApp.listen(PORT, function () {
-	console.log(`Servidor levantado en el puerto ${PORT}`);
-
-
-	sequelize.authenticate().then(() => {
-		console.log('fino');
-	}).catch(error => {
-		console.log('falla', error);
-	})
-
+expressApp.listen(PORT, () => {
+	console.log(`Servidor levantado en el puerto ${PORT}`)
 });
-	
